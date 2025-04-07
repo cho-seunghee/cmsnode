@@ -8,7 +8,9 @@ const permissionRoutes = require('./routes/permissions');
 const app = express();
 
 app.use(cors({
-  origin: 'https://cho-seunghee.github.io'
+  origin: ['https://cho-seunghee.github.io', 'http://localhost:5173'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
 }));
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
