@@ -1,0 +1,6 @@
+{
+    "createFile": "CALL create_file(?, ?, ?, ?, ?, ?)",
+    "getFileById": "CALL get_file_by_id(?)",
+    "updateFile": "CALL update_file(?, ?, ?, ?, ?, ?, ?)",
+    "deleteFile": "CALL delete_file(?)"
+  }

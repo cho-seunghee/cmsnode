@@ -1,0 +1,20 @@
+# 의존성
+node_modules/
+
+# 환경 변수
+.env
+
+# 로그 파일
+*.log
+npm-debug.log*
+
+# 빌드 파일
+/dist
+/build
+
+# 임시 파일
+*.tmp
+*.bak
+
+# macOS 파일
+.DS_Store
