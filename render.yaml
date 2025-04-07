@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: backend-service
+    env: node
+    plan: free
+    branch: main
+    runtime: node
+    buildCommand: "npm install"
+    startCommand: "npm start"
+    autoDeploy: true
+    envVars:
+      - key: PORT
+        value: 3000  # 또는 index.js에서 사용하는 포트
+      - key: NODE_ENV
+        value: production
+      - key: DB_HOST
+        value: mysql-choseunghee.alwaysdata.net
+      - key: DB_NAME
+        value: choseunghee_edudb
+      - key: DB_USER
+        value: 408044_root
+      - key: DB_PASSWORD
+        value: new1234!
+      - key: JWT_SECRET
+        value: test1234
