@@ -9,8 +9,6 @@ services:
     startCommand: "npm start"
     autoDeploy: true
     envVars:
-      - key: PORT
-        value: 5000  # 또는 index.js에서 사용하는 포트
       - key: NODE_ENV
         value: production
       - key: DB_HOST

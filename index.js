@@ -7,7 +7,9 @@ const permissionRoutes = require('./routes/permissions');
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+  origin: 'https://cho-seunghee.github.io'
+}));
 app.use(express.json());
 app.use('/uploads', express.static('uploads'));
 app.use(express.raw({ type: '*/*', limit: '10mb' })); // 파일 업로드용
@@ -17,4 +19,6 @@ app.use('/api/excel', excelRoutes);
 app.use('/api/file', fileRoutes);
 app.use('/api/permissions', permissionRoutes);
 
-app.listen(5000, () => console.log('Server running on port 5000'));
+// 동적 포트 설정
+const PORT = process.env.PORT || 5000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
