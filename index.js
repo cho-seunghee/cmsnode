@@ -3,7 +3,7 @@ const cors = require('cors');
 const authRoutes = require('./routes/auth');
 const excelRoutes = require('./routes/excel');
 const fileRoutes = require('./routes/file');
-const permissionRoutes = require('./routes/permissions');
+const permissionRoutes = require('./routes/admin/userauthmng');
 
 const app = express();
 

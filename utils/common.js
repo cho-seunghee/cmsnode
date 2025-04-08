@@ -9,5 +9,10 @@ const restoreSpecialChars = (str) => {
   return str.replace(/ˮ/g, "'").replace(/˝/g, '"').replace(/⁏/g, ';').replace(/∖/g, '\\').replace(/—/g, '--');
 };
 
+const clientIp = (req) => {
+  const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'Unknown IP';
+  return ip[0];
+};
 
-module.exports = { replaceSpecialChars, restoreSpecialChars };
+
+module.exports = { replaceSpecialChars, restoreSpecialChars, clientIp };

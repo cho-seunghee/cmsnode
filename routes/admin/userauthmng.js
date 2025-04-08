@@ -1,7 +1,9 @@
 const express = require('express');
-const db = require('../config/db');
+const db = require('../../config/db');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
+const userAuthMngSql = require('../../sqls/admin/userauthmngsql');
+const { execSql } = require('../../utils/execsql');
 
 const authMiddleware = (req, res, next) => {
   const token = req.headers.authorization?.split(' ')[1];
@@ -15,10 +17,12 @@ const authMiddleware = (req, res, next) => {
 };
 
 router.post('/create', authMiddleware, async (req, res) => {
-  const { userid, menucd, menunm, menuaccess } = req.body;
+  const { userid, menucd, menitiaunm, menuaccess } = req.body;
   if (req.user.role !== 'admin') return res.status(403).json({ message: 'Admin only' });
+
   try {
-    await db.query('INSERT INTO tb_permissions (userid, menucd, menunm, menuaccess) VALUES (?, ?, ?, ?)', [userid, menucd, menunm, menuaccess]);
+    const createQuery = userAuthMngSql.getCreatePermissionQuery();
+    await execSql(db, createQuery, [userid, menucd, menunm, menuaccess]);
     res.json({ message: 'Permission created' });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -27,10 +31,12 @@ router.post('/create', authMiddleware, async (req, res) => {
 
 router.post('/list', authMiddleware, async (req, res) => {
   const { userid, menucd, menunm } = req.body;
+
   try {
-    let query = 'SELECT * FROM tb_permissions WHERE 1=1';
+    let listQuery = userAuthMngSql.getListPermissionsQuery();
+    let query = listQuery.query;
     const params = [];
-    
+
     if (userid) {
       query += ' AND userid = ?';
       params.push(userid);
@@ -44,7 +50,8 @@ router.post('/list', authMiddleware, async (req, res) => {
       params.push(menunm);
     }
 
-    const [rows] = await db.query(query, params);
+    const updatedQuery = { query, params }; // Create a new query object with dynamic SQL
+    const [rows] = await execSql(db, updatedQuery, params);
     res.json(rows);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -54,11 +61,10 @@ router.post('/list', authMiddleware, async (req, res) => {
 router.post('/update', authMiddleware, async (req, res) => {
   const { id, menucd, menunm, menuaccess } = req.body;
   if (req.user.role !== 'admin') return res.status(403).json({ message: 'Admin only' });
+
   try {
-    await db.query(
-      'UPDATE tb_permissions SET menucd = ?, menunm = ?, menuaccess = ?, lastupdatedt = CURRENT_TIMESTAMP WHERE id = ?',
-      [menucd, menunm, menuaccess, id]
-    );
+    const updateQuery = userAuthMngSql.getUpdatePermissionQuery();
+    await execSql(db, updateQuery, [menucd, menunm, menuaccess, id]);
     res.json({ message: 'Permission updated' });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -68,8 +74,10 @@ router.post('/update', authMiddleware, async (req, res) => {
 router.post('/delete', authMiddleware, async (req, res) => {
   const { id } = req.body;
   if (req.user.role !== 'admin') return res.status(403).json({ message: 'Admin only' });
+
   try {
-    await db.query('DELETE FROM tb_permissions WHERE id = ?', [id]);
+    const deleteQuery = userAuthMngSql.getDeletePermissionQuery();
+    await execSql(db, deleteQuery, [id]);
     res.json({ message: 'Permission deleted' });
   } catch (error) {
     res.status(500).json({ error: error.message });
