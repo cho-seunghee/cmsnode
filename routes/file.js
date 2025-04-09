@@ -1,5 +1,5 @@
 const express = require('express');
-const db = require('../config/db');
+const pool = require('../config/db');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 
@@ -22,7 +22,7 @@ router.post('/create', authMiddleware, async (req, res) => {
   const uploaddt = new Date().toISOString().slice(0, 10).replace(/-/g, '');
 
   try {
-    const [result] = await db.query(
+    const [result] = await pool.query(
       'INSERT INTO tb_files (module, filename, filecontent, uploadby, uploadmon, uploaddt) VALUES (?, ?, ?, ?, ?, ?)',
       [module, filename, fileContent, uploadby, uploadmon, uploaddt]
     );
@@ -35,7 +35,7 @@ router.post('/create', authMiddleware, async (req, res) => {
 router.post('/read', authMiddleware, async (req, res) => {
   const { id } = req.body;
   try {
-    const [rows] = await db.query('SELECT * FROM tb_files WHERE id = ?', [id]);
+    const [rows] = await pool.query('SELECT * FROM tb_files WHERE id = ?', [id]);
     if (rows.length === 0) return res.status(404).json({ message: 'File not found' });
     res.json(rows[0]);
   } catch (error) {

@@ -1,7 +1,7 @@
 const express = require('express');
 const multer = require('multer');
 const ExcelJS = require('exceljs');
-const db = require('../config/db');
+const pool = require('../config/db');
 const router = express.Router();
 
 const upload = multer({ dest: 'uploads/' });
@@ -34,7 +34,7 @@ router.post('/upload', upload.single('excel'), async (req, res) => {
 
   try {
     for (const item of data) {
-      await db.query('INSERT INTO tb_userinfo (userid, username, password, email, role) VALUES (?, ?, ?, ?, ?)', 
+      await pool.query('INSERT INTO tb_userinfo (userid, username, password, email, role) VALUES (?, ?, ?, ?, ?)', 
         [item.userid, item.username, item.password, item.email, item.role || 'employee']);
     }
     res.json({ message: 'Employee data uploaded successfully' });

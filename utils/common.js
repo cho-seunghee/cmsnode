@@ -10,8 +10,15 @@ const restoreSpecialChars = (str) => {
 };
 
 const clientIp = (req) => {
-  const ip = req.headers['x-forwarded-for'] || req.socket.remoteAddress || 'Unknown IP';
-  return ip[0];
+  const forwarded = req.headers['x-forwarded-for'];
+  let ip = forwarded
+    ? forwarded.split(',')[0].trim()
+    : req.socket.remoteAddress;
+
+  // IPv6 localhost (::1) → IPv4 (127.0.0.1)로 변환 처리
+  if (ip === '::1' || ip === '127.0.0.1') ip = '공용 IP 아님 (로컬 접근)';
+
+  return ip;
 };
 
 

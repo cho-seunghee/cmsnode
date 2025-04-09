@@ -2,12 +2,10 @@ class AuthQueries {
   constructor() {
     this.queries = {
       login: {
-        query: 'SELECT * FROM tb_userinfo WHERE userid = ? AND pwd = ?',
-        params: ['userid', 'password']
+        query: 'SELECT * FROM tb_userinfo WHERE userid = ? AND pwd = ?'
       },
       userCheck: {
-        query: 'SELECT * FROM tb_userinfo WHERE userid = ?',
-        params: ['decoded.userid']
+        query: 'SELECT * FROM tb_userinfo WHERE userid = ?'
       }
     };
   }
